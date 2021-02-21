@@ -42,9 +42,14 @@ include_directories("libs/enet-1.3.14/include")
 add_definitions(-DWITH_SOUND)
 # add_definitions(-DFOR_DEB)
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
+    add_compile_options(-Wno-inconsistent-missing-override)
+endif ()
+
 if (APPLE)
-    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -mmacosx-version-min=10.7")
+    add_compile_options(-stdlib=libc++ -mmacosx-version-min=10.7)
 endif (APPLE)
+
 
 # optional tools
 add_subdirectory(controller)
@@ -102,7 +107,7 @@ set(BC_SOURCES
     Terrain.cpp
     Tide.cpp
     Utilities.cpp
-	ExitMessage.cpp
+    ExitMessage.cpp
     Water.cpp
 )
 
@@ -110,8 +115,8 @@ add_executable(bridgecommand-bc
     ${BC_SOURCES}
 )
 
-if (APPLE)
 
+if (APPLE)
     add_library(sndfile STATIC IMPORTED) # or STATIC instead of SHARED
     set_target_properties(sndfile PROPERTIES
       IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/libs/libsndfile/lib/libsndfile.a"
