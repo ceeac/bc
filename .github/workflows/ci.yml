@@ -1,0 +1,30 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  linux-gcc:
+    name: Linux GCC 10
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Dependencies
+        shell: bash
+        run: sudo apt -y update && sudo apt install -y --no-install-recommends build-essential gcc-10 g++-10 cmake ccache
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ccache:${{ github.job }}:${{ github.ref }}:${{ github.sha }}
+          restore-keys: |
+            ccache:${{ github.job }}:${{ github.ref }}
+            ccache:${{ github.job }}
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          CC=gcc-10 CXX=g++-10 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo  ../src/
+      - name: Build
+        run: |
+          cd build
+          make -j$(nproc) all
