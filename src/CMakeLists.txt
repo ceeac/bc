@@ -117,17 +117,6 @@ add_executable(bridgecommand-bc
 
 
 if (APPLE)
-    add_library(sndfile STATIC IMPORTED) # or STATIC instead of SHARED
-    set_target_properties(sndfile PROPERTIES
-      IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/libs/libsndfile/lib/libsndfile.a"
-      INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/libs/libsndfile/include"
-    )
-    add_library(portaudio STATIC IMPORTED) # or STATIC instead of SHARED
-    set_target_properties(portaudio PROPERTIES
-      IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/libs/portaudio/lib/libportaudio.a"
-      INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/libs/portaudio/include"
-    )
-
     target_link_libraries(bridgecommand-bc PRIVATE
         bc-asio
         enet
@@ -137,8 +126,8 @@ if (APPLE)
         sndfile
         portaudio
         "-framework AudioUnit"
-	    "-framework AudioToolbox"
-	    "-framework CoreAudio"
+        "-framework AudioToolbox"
+        "-framework CoreAudio"
     )
 else (APPLE)
     target_link_libraries(bridgecommand-bc PRIVATE
