@@ -28,7 +28,39 @@ jobs:
         run: |
           mkdir build
           cd build
-          CC=gcc-10 CXX=g++-10 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo  ../src/
+          CC=gcc-10 CXX=g++-10 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../src/
+      - name: Build
+        run: |
+          cd build
+          make -j$(nproc) all
+
+  linux-clang:
+    name: Linux Clang 10
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Dependencies
+        shell: bash
+        run: |
+          sudo apt -y update
+          sudo apt install -y --no-install-recommends \
+            build-essential clang-10 cmake ccache \
+            mesa-common-dev libxxf86vm-dev freeglut3-dev libxext-dev \
+            libxcursor-dev portaudio19-dev libsndfile1-dev
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.ccache
+          key: ccache:${{ github.job }}:${{ github.ref }}:${{ github.sha }}
+          restore-keys: |
+            ccache:${{ github.job }}:${{ github.ref }}
+            ccache:${{ github.job }}
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          CC=clang-10 CXX=clang++-10 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../src/
       - name: Build
         run: |
           cd build
