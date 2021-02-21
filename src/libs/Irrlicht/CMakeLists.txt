@@ -3,13 +3,15 @@ set(IRRLICHT_HOME "${CMAKE_CURRENT_SOURCE_DIR}/irrlicht-svn")
 
 add_library(bc-irrlicht INTERFACE)
 
+find_package(OpenGL REQUIRED)
+
 if (MSVC)
     target_link_libraries(bc-irrlicht INTERFACE
         "${IRRLICHT_HOME}/lib/Win32-visualstudio/Irrlicht.lib"
     )
 else (MSVC)
     include(ExternalProject)
-    
+
     if (APPLE)
         ExternalProject_Add(bc-irrlicht-internal
             SOURCE_DIR "${IRRLICHT_HOME}/source/Irrlicht/"
@@ -18,7 +20,7 @@ else (MSVC)
             BUILD_COMMAND xcodebuild -project Irrlicht.xcodeproj
             INSTALL_COMMAND cp ${IRRLICHT_HOME}/lib/OSX/libIrrlicht.a ${IRRLICHT_HOME}/source/Irrlicht/
         )
-    
+
         link_directories(
             /usr/X11R6/lib64 # or lib32
         )
@@ -37,7 +39,7 @@ else (MSVC)
             BUILD_COMMAND ${MAKE}
             INSTALL_COMMAND ""
         )
-    
+
         link_directories(
             /usr/X11R6/lib64 # or lib32
         )
