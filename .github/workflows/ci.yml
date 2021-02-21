@@ -29,6 +29,10 @@ jobs:
           mkdir build
           cd build
           CC=gcc-10 CXX=g++-10 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../src/
+      - name: Build Irrlicht
+        run: |
+          cd build
+          make -j$(nproc) bc-irrlicht-internal
       - name: Build
         run: |
           cd build
@@ -61,6 +65,10 @@ jobs:
           mkdir build
           cd build
           CC=clang-10 CXX=clang++-10 cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo ../src/
+      - name: Build Irrlicht
+        run: |
+          cd build
+          make -j$(nproc) bc-irrlicht-internal
       - name: Build
         run: |
           cd build
